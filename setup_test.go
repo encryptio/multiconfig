@@ -26,7 +26,7 @@ func bulkReplaceEnv(env map[string]string) map[string]string {
 
 func TestSetupInto(t *testing.T) {
 	type basics struct {
-		One string `default:"default"`
+		One string
 		Two bool `default:"true"`
 		ThirdField int `default:"4"`
 	}
@@ -42,10 +42,10 @@ func TestSetupInto(t *testing.T) {
 		Base string
 		Output interface{}
 	}{
-		{&basics{}, nil, nil, "base", &basics{"default", true, 4}},
+		{&basics{}, nil, nil, "base", &basics{"", true, 4}},
 		{&basics{}, []string{"-one=not"}, nil, "base", &basics{"not", true, 4}},
-		{&basics{}, []string{"--third-field", "8"}, nil, "base", &basics{"default", true, 8}},
-		{&basics{}, nil, map[string]string{"BASE_THIRD_FIELD": "11"}, "base", &basics{"default", true, 11}},
+		{&basics{}, []string{"--third-field", "8"}, nil, "base", &basics{"", true, 8}},
+		{&basics{}, nil, map[string]string{"BASE_THIRD_FIELD": "11"}, "base", &basics{"", true, 11}},
 		{&basics{}, []string{"--one", "two"}, map[string]string{"BASE_ONE": "three"}, "base", &basics{"two", true, 4}},
 		{&envChange{}, nil, nil, "base", &envChange{"def"}},
 		{&envChange{}, nil, map[string]string{"BASE_OTHER": "four"}, "base", &envChange{"four"}},
