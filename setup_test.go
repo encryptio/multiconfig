@@ -31,6 +31,10 @@ func TestSetupInto(t *testing.T) {
 		ThirdField int `default:"4"`
 	}
 
+	type envChange struct {
+		One string `default:"def" env:"OTHER"`
+	}
+
 	tests := []struct {
 		Obj interface{}
 		Args []string
@@ -43,6 +47,8 @@ func TestSetupInto(t *testing.T) {
 		{&basics{}, []string{"--third-field", "8"}, nil, "base", &basics{"default", true, 8}},
 		{&basics{}, nil, map[string]string{"BASE_THIRD_FIELD": "11"}, "base", &basics{"default", true, 11}},
 		{&basics{}, []string{"--one", "two"}, map[string]string{"BASE_ONE": "three"}, "base", &basics{"two", true, 4}},
+		{&envChange{}, nil, nil, "base", &envChange{"def"}},
+		{&envChange{}, nil, map[string]string{"BASE_OTHER": "four"}, "base", &envChange{"four"}},
 	}
 
 	for _, test := range tests {

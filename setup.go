@@ -48,8 +48,9 @@ func Setup(conf interface{}, base string) error {
 //     }
 //
 // If the "help" tag exists, it is passed as the help argument to flag.Var. If the "env" tag exists,
-// it overrides the default environment variable name (see EnvName.) If the "flag" tag exists, it
-// overrides the default flag name (see FlagName.)
+// it overrides the default environment variable name (see EnvName); note that the "env" tag still
+// gets the base prepended to it. If the "flag" tag exists, it overrides the default flag name (see
+// FlagName.)
 //
 // The supported types are the same as in the flag package: bool, time.Duration, float64, int,
 // int64, string, uint, and uint64.
@@ -76,6 +77,8 @@ func SetupInto(conf interface{}, base string, set *flag.FlagSet) error {
 		envName := f.Tag.Get("env")
 		if envName == "" {
 			envName = EnvName(base, flagName)
+		} else {
+			envName = EnvName(base, envName)
 		}
 		envVal := os.Getenv(envName)
 
