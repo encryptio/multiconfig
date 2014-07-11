@@ -1,10 +1,10 @@
 package multiconfig
 
 import (
-	"testing"
-	"os"
 	"flag"
+	"os"
 	"reflect"
+	"testing"
 )
 
 func bulkReplaceEnv(env map[string]string) map[string]string {
@@ -26,9 +26,9 @@ func bulkReplaceEnv(env map[string]string) map[string]string {
 
 func TestSetupInto(t *testing.T) {
 	type basics struct {
-		One string
-		Two bool `default:"true"`
-		ThirdField int `default:"4"`
+		One        string
+		Two        bool `default:"true"`
+		ThirdField int  `default:"4"`
 	}
 
 	type envChange struct {
@@ -36,11 +36,11 @@ func TestSetupInto(t *testing.T) {
 	}
 
 	tests := []struct {
-		Obj interface{}
-		Args []string
+		Obj         interface{}
+		Args        []string
 		Environment map[string]string
-		Base string
-		Output interface{}
+		Base        string
+		Output      interface{}
 	}{
 		{&basics{}, nil, nil, "base", &basics{"", true, 4}},
 		{&basics{}, []string{"-one=not"}, nil, "base", &basics{"not", true, 4}},
@@ -70,5 +70,39 @@ func TestSetupInto(t *testing.T) {
 		}
 
 		bulkReplaceEnv(oldEnv)
+	}
+}
+
+func TestSetupIntoHelp(t *testing.T) {
+	type helper struct {
+		One string `help:"help for one"`
+		Two string // no help
+	}
+
+	obj := &helper{}
+
+	set := flag.NewFlagSet("", flag.ContinueOnError)
+	err := SetupInto(obj, "base", set)
+	if err != nil {
+		t.Fatalf("SetupInto(helper{}, \"base\", set) returned unexpected error %v", err)
+	}
+	set.Parse(nil)
+
+	checked := 0
+	set.VisitAll(func(f *flag.Flag) {
+		if f.Name == "one" {
+			if f.Usage != "help for one" {
+				t.Errorf("Help for One field is %#v, wanted %#v", f.Usage, "help for one")
+			}
+			checked++
+		} else if f.Name == "two" {
+			if f.Usage != "" {
+				t.Errorf("Help for Two field is %#v, wanted %#v", f.Usage, "")
+			}
+			checked++
+		}
+	})
+	if checked != 2 {
+		t.Errorf("Didn't visit all flags")
 	}
 }

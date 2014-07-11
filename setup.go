@@ -5,27 +5,27 @@
 package multiconfig
 
 import (
-	"reflect"
 	"errors"
+	"flag"
+	"os"
+	"reflect"
 	"strconv"
 	"time"
-	"os"
-	"flag"
 )
 
 var (
 	ErrNotPointerToStruct = errors.New("conf object was not a pointer to a struct")
-	ErrBadType = errors.New("conf object has a field with an unsupported type")
+	ErrBadType            = errors.New("conf object has a field with an unsupported type")
 )
 
 type ErrorFlag struct {
-	FlagName string
+	FlagName   string
 	InitialVal string
-	Err error
+	Err        error
 }
 
 func (e ErrorFlag) Error() string {
-	return "Can't parse "+e.FlagName+" value "+e.InitialVal+": "+e.Err.Error()
+	return "Can't parse " + e.FlagName + " value " + e.InitialVal + ": " + e.Err.Error()
 }
 
 // Setup calls SetupInto(..., flag.CommandLine).
@@ -93,32 +93,44 @@ func SetupInto(conf interface{}, base string, set *flag.FlagSet) error {
 		switch val := val.(type) {
 		case *bool:
 			parsed, err := strconv.ParseBool(initialVal)
-			if err != nil { return ErrorFlag{flagName, initialVal, err} }
+			if err != nil {
+				return ErrorFlag{flagName, initialVal, err}
+			}
 			set.BoolVar(val, flagName, parsed, help)
 
 		case *time.Duration:
 			parsed, err := time.ParseDuration(initialVal)
-			if err != nil { return ErrorFlag{flagName, initialVal, err} }
+			if err != nil {
+				return ErrorFlag{flagName, initialVal, err}
+			}
 			set.DurationVar(val, flagName, parsed, help)
 
 		case *int:
 			parsed, err := strconv.ParseInt(initialVal, 0, 0)
-			if err != nil { return ErrorFlag{flagName, initialVal, err} }
+			if err != nil {
+				return ErrorFlag{flagName, initialVal, err}
+			}
 			set.IntVar(val, flagName, int(parsed), help)
 
 		case *int64:
 			parsed, err := strconv.ParseInt(initialVal, 0, 64)
-			if err != nil { return ErrorFlag{flagName, initialVal, err} }
+			if err != nil {
+				return ErrorFlag{flagName, initialVal, err}
+			}
 			set.Int64Var(val, flagName, parsed, help)
 
 		case *uint:
 			parsed, err := strconv.ParseUint(initialVal, 0, 0)
-			if err != nil { return ErrorFlag{flagName, initialVal, err} }
+			if err != nil {
+				return ErrorFlag{flagName, initialVal, err}
+			}
 			set.UintVar(val, flagName, uint(parsed), help)
 
 		case *uint64:
 			parsed, err := strconv.ParseUint(initialVal, 0, 64)
-			if err != nil { return ErrorFlag{flagName, initialVal, err} }
+			if err != nil {
+				return ErrorFlag{flagName, initialVal, err}
+			}
 			set.Uint64Var(val, flagName, uint64(parsed), help)
 
 		case *string:
@@ -126,7 +138,9 @@ func SetupInto(conf interface{}, base string, set *flag.FlagSet) error {
 
 		case *float64:
 			parsed, err := strconv.ParseFloat(initialVal, 64)
-			if err != nil { return ErrorFlag{flagName, initialVal, err} }
+			if err != nil {
+				return ErrorFlag{flagName, initialVal, err}
+			}
 			set.Float64Var(val, flagName, parsed, help)
 
 		default:

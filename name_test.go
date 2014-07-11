@@ -5,7 +5,7 @@ import (
 )
 
 func TestEnvName(t *testing.T) {
-	tests := []struct{
+	tests := []struct {
 		Base, Name, Output string
 	}{
 		{"base", "FieldName15", "BASE_FIELDNAME15"},
@@ -23,7 +23,7 @@ func TestEnvName(t *testing.T) {
 }
 
 func TestFlagName(t *testing.T) {
-	tests := []struct{
+	tests := []struct {
 		Name, Output string
 	}{
 		{"FieldName15", "field-name-15"},
