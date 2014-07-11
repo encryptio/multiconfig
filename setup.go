@@ -71,9 +71,11 @@ func SetupInto(conf interface{}, base string, set *flag.FlagSet) error {
 
 		defVal := f.Tag.Get("default")
 
+		flagName := FlagName(f.Name)
+
 		envName := f.Tag.Get("env")
 		if envName == "" {
-			envName = EnvName(base, f.Name)
+			envName = EnvName(base, flagName)
 		}
 		envVal := os.Getenv(envName)
 
@@ -82,7 +84,6 @@ func SetupInto(conf interface{}, base string, set *flag.FlagSet) error {
 			initialVal = defVal
 		}
 
-		flagName := FlagName(f.Name)
 		help := f.Tag.Get("help")
 
 		val := val.Field(i).Addr().Interface()

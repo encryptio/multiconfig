@@ -5,16 +5,15 @@ import (
 	"unicode"
 )
 
-// EnvName is the default mapping from field names to environment variables. It takes the output
-// of FlagName, uppercases every character, replaces dashes with underscores, and prepends the
-// uppercase of base+"_".
+// EnvName is the default mapping from field names to environment variables. It uppercases every
+// character, replaces dashes with underscores, and prepends the uppercase of base+"_".
+//
+// In SetupInto, this is called as EnvName(FlagName(fieldName)).
 //
 // For example:
-//    EnvName("program", "FieldName15") -> "PROGRAM_FIELD_NAME_15"
-func EnvName(base, varName string) string {
-	ret := FlagName(varName)
-
-	ret = strings.ToUpper(ret)
+//    EnvName("program", "field-15") -> "PROGRAM_FIELD_15"
+func EnvName(base, mappedName string) string {
+	ret := strings.ToUpper(mappedName)
 	ret = strings.Replace(ret, "-", "_", -1)
 	ret = strings.ToUpper(base) + "_" + ret
 

@@ -8,9 +8,10 @@ func TestEnvName(t *testing.T) {
 	tests := []struct{
 		Base, Name, Output string
 	}{
-		{"base", "FieldName15", "BASE_FIELD_NAME_15"},
+		{"base", "FieldName15", "BASE_FIELDNAME15"},
 		{"prefixHere", "underscores_in_name", "PREFIXHERE_UNDERSCORES_IN_NAME"},
-		{"extra_", "_UnderscoresHere", "EXTRA_UNDERSCORES_HERE"},
+		{"extra_", "_UnderscoresHere", "EXTRA_UNDERSCORESHERE"},
+		{"base", "dash-es", "BASE_DASH_ES"},
 	}
 
 	for _, test := range tests {
