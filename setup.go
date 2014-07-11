@@ -1,7 +1,23 @@
 // multiconfig reads configuration information from command line flags and environment variables.
 //
 // To use it, create a struct to contain your configuration variables and pass a pointer to it
-// to ReadConfig.
+// to Setup or SetupInto. For example:
+//
+//     var conf = struct {
+//         Upstream  string `default:"http://git.encryptio.com"`
+//         Listen    string `default:":8080"`
+//         SecretKey string
+//     }{}
+//     func main() {
+//         multiconfig.Setup(conf, "secureproxy")
+//         flag.Parse()
+//         ...
+//     }
+//
+// Then you can run the program without exposing the secret key in the command line arguments:
+//
+//     $ go build
+//     $ SECUREPROXY_SECRET_KEY="asdfasdf" ./secureproxy
 package multiconfig
 
 import (
