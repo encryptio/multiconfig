@@ -9,7 +9,7 @@
 //         SecretKey string
 //     }{}
 //     func main() {
-//         err := multiconfig.Setup(conf, "secureproxy")
+//         err := multiconfig.Setup(&conf, "secureproxy")
 //         if err != nil {
 //             log.Fatal(err)
 //         }
